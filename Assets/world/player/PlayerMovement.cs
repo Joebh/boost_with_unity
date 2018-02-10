@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
                     navMeshAgent.destination = hit.point;
                     navMeshAgent.isStopped = false;
 
-                    udpSend.send(new PlayerLocationTO(0, hit.point));
+                    //udpSend.send(new PlayerMovement(0, hit.point));
                 }
             }
         }

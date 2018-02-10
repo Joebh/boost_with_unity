@@ -64,7 +64,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakeOutput>ProtocolBuffers.exe</NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>for /r %%i in (*.proto) do (D:\protoc-3.5.1-win32\bin\protoc.exe --proto_path=$(MSBuildProjectDirectory) --cpp_out=$(MSBuildProjectDirectory)\server --csharp_out=$(MSBuildProjectDirectory)\client %%i)</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>rm -rf $(MSBuildProjectDirectory)\client
+rm -rf $(MSBuildProjectDirectory)\server
+mkdir $(MSBuildProjectDirectory)\client
+mkdir $(MSBuildProjectDirectory)\server
+for /r %%i in (*.proto) do (D:\protoc-3.5.1-win32\bin\protoc.exe --proto_path=$(MSBuildProjectDirectory) --cpp_out=$(MSBuildProjectDirectory)\server --csharp_out=$(MSBuildProjectDirectory)\client %%i)</NMakeBuildCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeOutput>ProtocolBuffers.exe</NMakeOutput>
@@ -76,7 +80,7 @@
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.proto" />
+    <None Include="player-movement.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

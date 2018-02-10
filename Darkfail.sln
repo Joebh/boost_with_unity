@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Darkfail", "Darkfail.csproj", "{6CFDE9D7-9E78-3F62-CF38-2654619D45BD}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server", "Server\Server.vcxproj", "{23187A87-EE8D-4766-BA2F-89329A2ECBE9}"
@@ -17,14 +19,10 @@ Global
 		{6CFDE9D7-9E78-3F62-CF38-2654619D45BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CFDE9D7-9E78-3F62-CF38-2654619D45BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CFDE9D7-9E78-3F62-CF38-2654619D45BD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{23187A87-EE8D-4766-BA2F-89329A2ECBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{23187A87-EE8D-4766-BA2F-89329A2ECBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{23187A87-EE8D-4766-BA2F-89329A2ECBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{23187A87-EE8D-4766-BA2F-89329A2ECBE9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5478C21-A5D8-4D73-9DCE-1598909A7FFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5478C21-A5D8-4D73-9DCE-1598909A7FFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5478C21-A5D8-4D73-9DCE-1598909A7FFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5478C21-A5D8-4D73-9DCE-1598909A7FFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23187A87-EE8D-4766-BA2F-89329A2ECBE9}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{23187A87-EE8D-4766-BA2F-89329A2ECBE9}.Release|Any CPU.ActiveCfg = Release|Win32
+		{F5478C21-A5D8-4D73-9DCE-1598909A7FFD}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{F5478C21-A5D8-4D73-9DCE-1598909A7FFD}.Release|Any CPU.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
