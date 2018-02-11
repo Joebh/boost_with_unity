@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-message PlayerMovement {
-  string id = 1;
-  int32 hash = 2;
-  int32 x = 3;
-  int32 y = 4;
-  int32 z = 5;
-}

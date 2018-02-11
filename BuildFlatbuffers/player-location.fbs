@@ -1,0 +1,14 @@
+namespace TransferObjects;
+
+struct Vec3 {
+  x:float;
+  y:float;
+  z:float;
+}
+
+table PlayerLocation {
+  pos:Vec3;
+  id:string;
+}
+
+root_type PlayerLocation;

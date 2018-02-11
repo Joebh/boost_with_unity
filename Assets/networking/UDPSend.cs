@@ -9,8 +9,9 @@ using Assets.networking;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 
-public class UDPSend : MonoBehaviour {
-    
+public class UDPSend : MonoBehaviour
+{
+
     // prefs
     private string IP;  // define in init
     private int port;  // define in init
@@ -20,13 +21,13 @@ public class UDPSend : MonoBehaviour {
     private UdpClient client;
     private BinaryFormatter bf;
     private ArrayList sending;
-    
+
     public void Start()
     {
         // define
         IP = "127.0.0.1";
         port = 33333;
-        
+
         remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), port);
         client = new UdpClient();
         bf = new BinaryFormatter();
@@ -55,20 +56,13 @@ public class UDPSend : MonoBehaviour {
     }
 
     // sendData
-    public void send(object sendingObject)
+    public void send(byte[] sendingBytes, int hashCode)
     {
-        using (var ms = new MemoryStream())
-        {
-            bf.Serialize(ms, sendingObject);
-            SendingStructure structure = new SendingStructure(ms.ToArray(), sendingObject.GetHashCode());
+        SendingStructure structure = new SendingStructure(sendingBytes, hashCode);
 
-            sendMessage(structure);
+        sendMessage(structure);
 
-            sending.Add(structure);
-
-            // once sent wait for a recv message saying that this sending object was received
-
-        }
+        sending.Add(structure);
     }
 
 }

@@ -18,7 +18,10 @@
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="player-movement.proto">
+    <None Include="monster.fbs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="player-location.fbs">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

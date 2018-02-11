@@ -1,20 +1,20 @@
 ========================================================================
-    MAKEFILE PROJECT : ProtocolBuffers Project Overview
+    MAKEFILE PROJECT : BuildFlatbuffers Project Overview
 ========================================================================
 
-AppWizard has created this ProtocolBuffers project for you.  
+AppWizard has created this BuildFlatbuffers project for you.  
 
 This file contains a summary of what you will find in each of the files that
-make up your ProtocolBuffers project.
+make up your BuildFlatbuffers project.
 
 
-ProtocolBuffers.vcxproj
+BuildFlatbuffers.vcxproj
     This is the main project file for VC++ projects generated using an Application Wizard. 
     It contains information about the version of Visual C++ that generated the file, and 
     information about the platforms, configurations, and project features selected with the
     Application Wizard.
 
-ProtocolBuffers.vcxproj.filters
+BuildFlatbuffers.vcxproj.filters
     This is the filters file for VC++ projects generated using an Application Wizard. 
     It contains information about the association between the files in your project 
     and the filters. This association is used in the IDE to show grouping of files with
