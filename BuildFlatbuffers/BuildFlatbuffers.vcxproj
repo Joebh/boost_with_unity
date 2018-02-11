@@ -66,7 +66,11 @@
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>rm -rf $(SolutionDir)Assets\generated
 mkdir $(SolutionDir)Assets\generated
-for /r %%i in (*.fbs) do (D:\flatbuffers\Debug\flatc.exe -I $(MSBuildProjectDirectory) -o $(SolutionDir)Assets\generated --csharp %%i)</NMakeBuildCommandLine>
+for /r %%i in (*.fbs) do (D:\flatbuffers\Debug\flatc.exe -I $(MSBuildProjectDirectory) -o $(SolutionDir)Assets\generated --csharp %%i)
+
+rm -rf $(SolutionDir)Server\generated
+mkdir $(SolutionDir)Server\generated
+for /r %%i in (*.fbs) do (D:\flatbuffers\Debug\flatc.exe -I $(MSBuildProjectDirectory) -o $(SolutionDir)Server\generated --cpp %%i)</NMakeBuildCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeOutput>BuildFlatbuffers.exe</NMakeOutput>

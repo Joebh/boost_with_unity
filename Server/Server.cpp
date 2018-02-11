@@ -7,6 +7,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
+#include "flatbuffers/flatbuffers.h"
+#include "generated\player-location_generated.h"
 
 using boost::asio::ip::tcp;
 using boost::asio::ip::udp;

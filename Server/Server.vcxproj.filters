@@ -24,6 +24,12 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="generated\monster_generated.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\player-location_generated.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
