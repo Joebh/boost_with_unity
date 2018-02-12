@@ -104,15 +104,24 @@ inline const TransferObjects::PlayerLocation *GetPlayerLocation(const void *buf)
   return flatbuffers::GetRoot<TransferObjects::PlayerLocation>(buf);
 }
 
+inline const char *PlayerLocationIdentifier() {
+  return "PLOC";
+}
+
+inline bool PlayerLocationBufferHasIdentifier(const void *buf) {
+  return flatbuffers::BufferHasIdentifier(
+      buf, PlayerLocationIdentifier());
+}
+
 inline bool VerifyPlayerLocationBuffer(
     flatbuffers::Verifier &verifier) {
-  return verifier.VerifyBuffer<TransferObjects::PlayerLocation>(nullptr);
+  return verifier.VerifyBuffer<TransferObjects::PlayerLocation>(PlayerLocationIdentifier());
 }
 
 inline void FinishPlayerLocationBuffer(
     flatbuffers::FlatBufferBuilder &fbb,
     flatbuffers::Offset<TransferObjects::PlayerLocation> root) {
-  fbb.Finish(root);
+  fbb.Finish(root, PlayerLocationIdentifier());
 }
 
 }  // namespace TransferObjects

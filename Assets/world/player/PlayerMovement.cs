@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using System.IO;
+using System;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -35,15 +36,19 @@ public class PlayerMovement : MonoBehaviour
                     navMeshAgent.destination = hit.point;
                     navMeshAgent.isStopped = false;
 
-                    FlatBuffers.FlatBufferBuilder fbb = new FlatBuffers.FlatBufferBuilder(64);
+                    FlatBuffers.FlatBufferBuilder fbb = new FlatBuffers.FlatBufferBuilder(1024);
                     FlatBuffers.StringOffset id = fbb.CreateString("Joe");
                     TransferObjects.PlayerLocation.StartPlayerLocation(fbb);
                     TransferObjects.PlayerLocation.AddId(fbb, id);
                     TransferObjects.PlayerLocation.AddPos(fbb, TransferObjects.Vec3.CreateVec3(fbb, hit.point.x, hit.point.y, hit.point.z));
                     FlatBuffers.Offset<TransferObjects.PlayerLocation> playerLocation = TransferObjects.PlayerLocation.EndPlayerLocation(fbb);
 
-                    fbb.Finish(playerLocation.Value);
-                    udpSend.send(fbb.DataBuffer.Data, fbb.DataBuffer.GetHashCode());
+                    TransferObjects.PlayerLocation.FinishPlayerLocationBuffer(fbb, playerLocation);
+                    //fbb.Finish(playerLocation.Value);
+
+                    byte[] dst = new byte[fbb.DataBuffer.Length - fbb.DataBuffer.Position];
+                    Array.Copy(fbb.DataBuffer.Data, fbb.DataBuffer.Position, dst, 0, dst.Length);
+                    udpSend.send(dst, fbb.DataBuffer.GetHashCode());
                 }
             }
         }

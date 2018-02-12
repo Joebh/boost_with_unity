@@ -12,3 +12,5 @@ table PlayerLocation {
 }
 
 root_type PlayerLocation;
+
+file_identifier "PLOC";

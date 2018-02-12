@@ -9,6 +9,7 @@
 #include <boost/asio.hpp>
 #include "flatbuffers/flatbuffers.h"
 #include "generated\player-location_generated.h"
+#include <fstream>
 
 using boost::asio::ip::tcp;
 using boost::asio::ip::udp;
@@ -105,16 +106,40 @@ private:
 	void start_receive()
 	{
 		socket_.async_receive_from(
-			boost::asio::buffer(recv_buffer_), remote_endpoint_,
-			boost::bind(&udp_server::handle_receive, this,
-				boost::asio::placeholders::error));
+			boost::asio::buffer(recv_buffer_),
+			remote_endpoint_,
+			boost::bind(
+				&udp_server::handle_receive,
+				this,
+				boost::asio::placeholders::error
+				));
 	}
+
+	/*uint8_t* findStart(uint8_t *buf) {
+		for (int i = 0; i < 1024; i++) {
+			if (buf[i] != 0) {
+				return &buf[i];
+			}
+		}
+
+		return buf;
+	}*/
 
 	void handle_receive(const boost::system::error_code& error)
 	{
 		if (!error || error == boost::asio::error::message_size)
 		{
-			std::cout << "Received: '" << std::string(recv_buffer_.begin(), recv_buffer_.end()) << "'\n";
+			uint8_t *buf = recv_buffer_.data();
+			//uint8_t *start = findStart(buf);
+
+			const char * identifier = flatbuffers::GetBufferIdentifier(buf);
+
+			if (std::strcmp(identifier, TransferObjects::PlayerLocationIdentifier())) {
+				auto playerLocation = TransferObjects::GetPlayerLocation(buf);
+				std::string idOut = playerLocation->id()->c_str();
+
+				std::cout << idOut << " to " << playerLocation->pos()->x() << ", " << playerLocation->pos()->y() << ", " << playerLocation->pos()->z();
+			}
 
 			boost::shared_ptr<std::string> message(
 				new std::string(make_daytime_string()));
@@ -132,13 +157,27 @@ private:
 
 	udp::socket socket_;
 	udp::endpoint remote_endpoint_;
-	boost::array<char, 1024> recv_buffer_;
+	boost::array<uint8_t, 1024> recv_buffer_;
 };
 
 int main()
 {
 	try
 	{
+		/*flatbuffers::FlatBufferBuilder fbb(1024);
+		auto id = fbb.CreateString("Joedfgsdfgsdgsdfgsdfgdd");
+		TransferObjects::PlayerLocationBuilder plb(fbb);
+		
+		plb.add_id(id);
+		auto oldestPl = plb.Finish();
+		fbb.Finish(oldestPl);
+		uint8_t *buf = fbb.GetBufferPointer();
+		std::cout << fbb.GetSize();
+
+		auto pl = TransferObjects::GetPlayerLocation(buf);
+		
+		std::string x = pl->id()->c_str();		
+		std::cout << x;*/
 		boost::asio::io_service io_service;
 		tcp_server server1(io_service);
 		udp_server server2(io_service);
@@ -151,3 +190,13 @@ int main()
 
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+

@@ -14,6 +14,7 @@ public struct PlayerLocation : IFlatbufferObject
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
   public static PlayerLocation GetRootAsPlayerLocation(ByteBuffer _bb) { return GetRootAsPlayerLocation(_bb, new PlayerLocation()); }
   public static PlayerLocation GetRootAsPlayerLocation(ByteBuffer _bb, PlayerLocation obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool PlayerLocationBufferHasIdentifier(ByteBuffer _bb) { return Table.__has_identifier(_bb, "PLOC"); }
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
   public PlayerLocation __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -28,7 +29,7 @@ public struct PlayerLocation : IFlatbufferObject
     int o = builder.EndObject();
     return new Offset<PlayerLocation>(o);
   }
-  public static void FinishPlayerLocationBuffer(FlatBufferBuilder builder, Offset<PlayerLocation> offset) { builder.Finish(offset.Value); }
+  public static void FinishPlayerLocationBuffer(FlatBufferBuilder builder, Offset<PlayerLocation> offset) { builder.Finish(offset.Value, "PLOC"); }
 };
 
 
