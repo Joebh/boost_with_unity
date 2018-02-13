@@ -16,8 +16,6 @@ using boost::asio::ip::udp;
 
 std::string make_daytime_string()
 {
-	using namespace std; // For time_t, time and ctime;
-	time_t now = time(0);
 	return "asdf";
 }
 
@@ -139,20 +137,38 @@ private:
 				std::string idOut = playerLocation->id()->c_str();
 
 				std::cout << idOut << " to " << playerLocation->pos()->x() << ", " << playerLocation->pos()->y() << ", " << playerLocation->pos()->z();
+
+				flatbuffers::FlatBufferBuilder fbb(1024);
+				auto id = fbb.CreateString(playerLocation->id()->c_str());
+				TransferObjects::PlayerLocationBuilder plb(fbb);
+
+				plb.add_id(id);
+				auto oldestPl = plb.Finish();
+				fbb.Finish(oldestPl);
+				uint8_t * bufferPtr = fbb.GetBufferPointer();
+				auto size = fbb.GetSize();
+
+
+				socket_.async_send_to(
+					boost::asio::buffer(
+						bufferPtr,
+						size
+					), 
+					remote_endpoint_,
+					boost::bind(
+						&udp_server::handle_send, 
+						this));
 			}
 
-			boost::shared_ptr<std::string> message(
-				new std::string(make_daytime_string()));
-
-			socket_.async_send_to(boost::asio::buffer(*message), remote_endpoint_,
-				boost::bind(&udp_server::handle_send, this, message));
+			
 
 			start_receive();
 		}
 	}
 
-	void handle_send(boost::shared_ptr<std::string> /*message*/)
+	void handle_send()
 	{
+		std::cout << "sent";
 	}
 
 	udp::socket socket_;

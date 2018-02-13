@@ -44,11 +44,10 @@ public class PlayerMovement : MonoBehaviour
                     FlatBuffers.Offset<TransferObjects.PlayerLocation> playerLocation = TransferObjects.PlayerLocation.EndPlayerLocation(fbb);
 
                     TransferObjects.PlayerLocation.FinishPlayerLocationBuffer(fbb, playerLocation);
-                    //fbb.Finish(playerLocation.Value);
 
                     byte[] dst = new byte[fbb.DataBuffer.Length - fbb.DataBuffer.Position];
                     Array.Copy(fbb.DataBuffer.Data, fbb.DataBuffer.Position, dst, 0, dst.Length);
-                    udpSend.send(dst, fbb.DataBuffer.GetHashCode());
+                    udpSend.send(dst);
                 }
             }
         }
@@ -56,7 +55,9 @@ public class PlayerMovement : MonoBehaviour
         if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
         {
             if (!navMeshAgent.hasPath || Mathf.Abs(navMeshAgent.velocity.sqrMagnitude) < float.Epsilon)
+            {
                 walking = false;
+            }
         }
         else {
             walking = true;
