@@ -90,8 +90,8 @@
     <Compile Include="Assets\generated\MyGame\Vec3.cs" />
     <Compile Include="Assets\generated\TransferObjects\PlayerLocation.cs" />
     <Compile Include="Assets\generated\TransferObjects\Vec3.cs" />
-    <Compile Include="Assets\networking\UDPRecv.cs" />
-    <Compile Include="Assets\networking\UDPSend.cs" />
+    <Compile Include="Assets\networking\Handlers.cs" />
+    <Compile Include="Assets\networking\UDPConnection.cs" />
     <Compile Include="Assets\world\CameraController.cs" />
     <Compile Include="Assets\world\player\PlayerMovement.cs" />
   </ItemGroup>

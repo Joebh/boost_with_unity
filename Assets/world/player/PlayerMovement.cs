@@ -6,19 +6,27 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.IO;
 using System;
+using Assets.networking.handlers;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public UDPSend udpSend;
+    public UDPConnection udpConnection;
     private Animator anim;
     private NavMeshAgent navMeshAgent;
     private bool walking;
+
+    void UpdateFromServer(TransferObjects.PlayerLocation pl)
+    {
+        Debug.Log(pl.Id);
+    }
 
     // Use this for initialization
     void Awake()
     {
         anim = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
+
+        udpConnection.addRecvHandler(new PlayerLocationHandler(UpdateFromServer));
     }
 
     // Update is called once per frame
@@ -47,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
                     byte[] dst = new byte[fbb.DataBuffer.Length - fbb.DataBuffer.Position];
                     Array.Copy(fbb.DataBuffer.Data, fbb.DataBuffer.Position, dst, 0, dst.Length);
-                    udpSend.send(dst);
+                    udpConnection.send(dst);
                 }
             }
         }

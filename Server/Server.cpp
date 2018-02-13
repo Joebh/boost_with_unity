@@ -141,10 +141,12 @@ private:
 				flatbuffers::FlatBufferBuilder fbb(1024);
 				auto id = fbb.CreateString(playerLocation->id()->c_str());
 				TransferObjects::PlayerLocationBuilder plb(fbb);
-
 				plb.add_id(id);
 				auto oldestPl = plb.Finish();
-				fbb.Finish(oldestPl);
+				//fbb.Finish(oldestPl);
+
+				TransferObjects::FinishPlayerLocationBuffer(fbb, oldestPl);
+
 				uint8_t * bufferPtr = fbb.GetBufferPointer();
 				auto size = fbb.GetSize();
 

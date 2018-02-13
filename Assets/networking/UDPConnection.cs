@@ -8,13 +8,19 @@ using System.Threading;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Collections.Generic;
+using Assets.networking.handlers;
 
-public class UDPRecv : MonoBehaviour
+public class UDPConnection : MonoBehaviour
 {
 
-    private UdpClient client;
+    // prefs
+    private string IP;  // define in init
+    private int port;  // define in init
 
-    public delegate void PlayerLocationHandler(TransferObjects.PlayerLocation pl);
+    // "connection" things
+    private IPEndPoint remoteEndPoint;
+    private UdpClient client;
+    
     private static List<PlayerLocationHandler> plHandlers = new List<PlayerLocationHandler>();
 
     static void OnUdpData(IAsyncResult result)
@@ -46,27 +52,39 @@ public class UDPRecv : MonoBehaviour
 
     public void Start()
     {
+        // define
+        IP = "127.0.0.1";
+        port = 33333;
+
+        remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), port);
         client = new UdpClient();
+        
         client.BeginReceive(new AsyncCallback(OnUdpData), client);
-
-        addHook();
     }
-
-
-    // sending everything until recved
+    
     void Update()
     {
-
+        
     }
 
-    void test(TransferObjects.PlayerLocation pl)
+    // sendData
+    public void send(byte[] sendingBytes)
     {
-        Debug.Log(pl.Id);
+        try
+        {
+            int sent = 0;
+            do {
+                sent = client.Send(sendingBytes, sendingBytes.Length, remoteEndPoint);
+            } while (sent == 0);
+        }
+        catch (Exception err)
+        {
+            print(err.ToString());
+        }
     }
-
-    void addHook()
+    
+    public void addRecvHandler(PlayerLocationHandler handler)
     {
-        PlayerLocationHandler handler = new PlayerLocationHandler(test);
         plHandlers.Add(handler);
     }
 
