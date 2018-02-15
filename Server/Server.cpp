@@ -182,20 +182,14 @@ int main()
 {
 	try
 	{
-		/*flatbuffers::FlatBufferBuilder fbb(1024);
-		auto id = fbb.CreateString("Joedfgsdfgsdgsdfgsdfgdd");
-		TransferObjects::PlayerLocationBuilder plb(fbb);
-		
-		plb.add_id(id);
-		auto oldestPl = plb.Finish();
-		fbb.Finish(oldestPl);
-		uint8_t *buf = fbb.GetBufferPointer();
-		std::cout << fbb.GetSize();
+		// call db for state of game
+		// load previous player locations
 
-		auto pl = TransferObjects::GetPlayerLocation(buf);
-		
-		std::string x = pl->id()->c_str();		
-		std::cout << x;*/
+		// load terrain
+
+		// create agents
+
+		// start tcp and udp servers
 		boost::asio::io_service io_service;
 		tcp_server server1(io_service);
 		udp_server server2(io_service);

@@ -60,16 +60,16 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         
-        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
-        {
-            if (!navMeshAgent.hasPath || Mathf.Abs(navMeshAgent.velocity.sqrMagnitude) < float.Epsilon)
-            {
-                walking = false;
-            }
-        }
-        else {
-            walking = true;
-        }
+        //if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        //{
+        //    if (!navMeshAgent.hasPath || Mathf.Abs(navMeshAgent.velocity.sqrMagnitude) < float.Epsilon)
+        //    {
+        //        walking = false;
+        //    }
+        //}
+        //else {
+        //    walking = true;
+        //}
 
         anim.SetBool("IsWalking", walking);
     }
