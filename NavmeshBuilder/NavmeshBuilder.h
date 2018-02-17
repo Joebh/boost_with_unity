@@ -10,6 +10,8 @@ public:
 	NavmeshBuilder(BuildContext *ctx, InputGeom *geom);
 	~NavmeshBuilder();
 
+	dtNavMesh* loadAll(const char* path);
+	void saveAll(const char* path);
 	bool handleBuild();
 private:
 	class InputGeom* m_geom;
