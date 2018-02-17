@@ -86,7 +86,10 @@ int main()
 		// load previous player locations
 
 		// load terrain
-		TerrainNavigator navigator("map.navmesh");
+		TerrainNavigator navigator;
+
+		navigator.loadMesh("terrain.navmesh");
+
 		// create handlers
 		PlayerLocationHandler plh(navigator);
 		

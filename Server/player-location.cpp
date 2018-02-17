@@ -22,9 +22,8 @@ boost::asio::mutable_buffers_1 PlayerLocationHandler::handle(uint8_t *buf) {
 	auto playerLocation = TransferObjects::GetPlayerLocation(buf);
 	std::string idOut = playerLocation->id()->c_str();
 	
-	navigator_.Meow();
+	//navigator_.getPath(playerLocation->pos()->x(), playerLocation->pos()->y(), playerLocation->pos()->z());
 	
-	std::cout << idOut << " to " << playerLocation->pos()->x() << ", " << playerLocation->pos()->y() << ", " << playerLocation->pos()->z();
 	
 	flatbuffers::FlatBufferBuilder fbb(1024);
 	auto id = fbb.CreateString(playerLocation->id()->c_str());
