@@ -42,10 +42,14 @@ STRUCT_END(Vec3, 12);
 struct PlayerLocation FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_POS = 4,
-    VT_ID = 6
+    VT_DEST = 6,
+    VT_ID = 8
   };
   const Vec3 *pos() const {
     return GetStruct<const Vec3 *>(VT_POS);
+  }
+  const Vec3 *dest() const {
+    return GetStruct<const Vec3 *>(VT_DEST);
   }
   const flatbuffers::String *id() const {
     return GetPointer<const flatbuffers::String *>(VT_ID);
@@ -53,6 +57,7 @@ struct PlayerLocation FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<Vec3>(verifier, VT_POS) &&
+           VerifyField<Vec3>(verifier, VT_DEST) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.Verify(id()) &&
            verifier.EndTable();
@@ -64,6 +69,9 @@ struct PlayerLocationBuilder {
   flatbuffers::uoffset_t start_;
   void add_pos(const Vec3 *pos) {
     fbb_.AddStruct(PlayerLocation::VT_POS, pos);
+  }
+  void add_dest(const Vec3 *dest) {
+    fbb_.AddStruct(PlayerLocation::VT_DEST, dest);
   }
   void add_id(flatbuffers::Offset<flatbuffers::String> id) {
     fbb_.AddOffset(PlayerLocation::VT_ID, id);
@@ -83,9 +91,11 @@ struct PlayerLocationBuilder {
 inline flatbuffers::Offset<PlayerLocation> CreatePlayerLocation(
     flatbuffers::FlatBufferBuilder &_fbb,
     const Vec3 *pos = 0,
+    const Vec3 *dest = 0,
     flatbuffers::Offset<flatbuffers::String> id = 0) {
   PlayerLocationBuilder builder_(_fbb);
   builder_.add_id(id);
+  builder_.add_dest(dest);
   builder_.add_pos(pos);
   return builder_.Finish();
 }
@@ -93,10 +103,12 @@ inline flatbuffers::Offset<PlayerLocation> CreatePlayerLocation(
 inline flatbuffers::Offset<PlayerLocation> CreatePlayerLocationDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     const Vec3 *pos = 0,
+    const Vec3 *dest = 0,
     const char *id = nullptr) {
   return TransferObjects::CreatePlayerLocation(
       _fbb,
       pos,
+      dest,
       id ? _fbb.CreateString(id) : 0);
 }
 

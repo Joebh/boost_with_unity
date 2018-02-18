@@ -17,7 +17,10 @@ public class PlayerMovement : MonoBehaviour
 
     void UpdateFromServer(TransferObjects.PlayerLocation pl)
     {
-        Debug.Log(pl.Id);
+        if (pl.Pos.HasValue)
+        {
+            gameObject.transform.position = new Vector3(pl.Pos.Value.X, pl.Pos.Value.Y, pl.Pos.Value.Z);
+        }
     }
 
     // Use this for initialization
@@ -41,14 +44,27 @@ public class PlayerMovement : MonoBehaviour
                 if (hit.collider.CompareTag("Ground"))
                 {
                     walking = true;
-                    navMeshAgent.destination = hit.point;
-                    navMeshAgent.isStopped = false;
-
+                    //navMeshAgent.destination = hit.point;
+                    //navMeshAgent.isStopped = false;
+                    
                     FlatBuffers.FlatBufferBuilder fbb = new FlatBuffers.FlatBufferBuilder(1024);
                     FlatBuffers.StringOffset id = fbb.CreateString("Joe");
                     TransferObjects.PlayerLocation.StartPlayerLocation(fbb);
                     TransferObjects.PlayerLocation.AddId(fbb, id);
-                    TransferObjects.PlayerLocation.AddPos(fbb, TransferObjects.Vec3.CreateVec3(fbb, hit.point.x, hit.point.y, hit.point.z));
+
+                    TransferObjects.PlayerLocation.AddPos(fbb, 
+                        TransferObjects.Vec3.CreateVec3(fbb, 
+                        gameObject.transform.position.x,
+                        gameObject.transform.position.y,
+                        gameObject.transform.position.z));
+
+                    TransferObjects.PlayerLocation.AddDest(fbb, 
+                        TransferObjects.Vec3.CreateVec3(
+                            fbb, 
+                            hit.point.x, 
+                            hit.point.y, 
+                            hit.point.z));
+
                     FlatBuffers.Offset<TransferObjects.PlayerLocation> playerLocation = TransferObjects.PlayerLocation.EndPlayerLocation(fbb);
 
                     TransferObjects.PlayerLocation.FinishPlayerLocationBuffer(fbb, playerLocation);

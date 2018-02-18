@@ -9,7 +9,7 @@ public:                      // begin public section
 	PlayerLocationHandler(TerrainNavigator);       // constructor
 	PlayerLocationHandler(const PlayerLocationHandler& copy_from); //copy constructor
 	~PlayerLocationHandler();                    // destructor
-	boost::asio::mutable_buffers_1 handle(uint8_t *buf);
+	void handle(const void *buf);
 private:                      // begin private section
 	TerrainNavigator navigator_;
 };

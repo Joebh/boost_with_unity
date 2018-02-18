@@ -10,7 +10,7 @@ public:                      // begin public section
 	TerrainNavigator& operator=(const TerrainNavigator& copy_from); //copy assignment
 	~TerrainNavigator();                    // destructor
 
-	dtNavMesh* loadMesh(const char* path);
+	void loadMesh(const char* path);
 private:                      // begin private section
-	std::string terrainFile;
+	dtNavMesh* m_mesh;
 };

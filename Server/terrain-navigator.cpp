@@ -17,10 +17,12 @@ TerrainNavigator::~TerrainNavigator()
 
 }
 
-dtNavMesh* TerrainNavigator::loadMesh(const char* path)
+void TerrainNavigator::loadMesh(const char* path)
 {
 	FILE* fp = fopen(path, "rb");
-	if (!fp) return 0;
+	if (!fp) {
+		return;
+	}
 
 	// Read header.
 	NavMeshSetHeader header;
@@ -28,30 +30,30 @@ dtNavMesh* TerrainNavigator::loadMesh(const char* path)
 	if (readLen != 1)
 	{
 		fclose(fp);
-		return 0;
+		return;
 	}
 	if (header.magic != NAVMESHSET_MAGIC)
 	{
 		fclose(fp);
-		return 0;
+		return;
 	}
 	if (header.version != NAVMESHSET_VERSION)
 	{
 		fclose(fp);
-		return 0;
+		return;
 	}
 
 	dtNavMesh* mesh = dtAllocNavMesh();
 	if (!mesh)
 	{
 		fclose(fp);
-		return 0;
+		return;
 	}
 	dtStatus status = mesh->init(&header.params);
 	if (dtStatusFailed(status))
 	{
 		fclose(fp);
-		return 0;
+		return;
 	}
 
 	// Read tiles.
@@ -62,7 +64,7 @@ dtNavMesh* TerrainNavigator::loadMesh(const char* path)
 		if (readLen != 1)
 		{
 			fclose(fp);
-			return 0;
+			return;
 		}
 
 		if (!tileHeader.tileRef || !tileHeader.dataSize)
@@ -76,13 +78,13 @@ dtNavMesh* TerrainNavigator::loadMesh(const char* path)
 		{
 			dtFree(data);
 			fclose(fp);
-			return 0;
+			return;
 		}
 		mesh->addTile(data, tileHeader.dataSize, DT_TILE_FREE_DATA, tileHeader.tileRef, 0);
 	}
 
 	fclose(fp);
 
-	return mesh;
+	m_mesh = mesh;
 }
 

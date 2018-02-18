@@ -1,109 +1,121 @@
-#include "stdafx.h"
-#include <ctime>
-#include <iostream>
-#include <string>
-#include <boost/array.hpp>
-#include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/asio.hpp>
-#include "flatbuffers/flatbuffers.h"
-#include <fstream>
-#include "terrain-navigator.h"
-#include "player-location.h"
+#define _WIN32_WINNT 0x0501
+#include "server.h"
 
-using boost::asio::ip::udp;
-
-class udp_server
+Server::Server() :
+	m_socket(m_io_service, udp::endpoint(udp::v4(), 33333)),
+	m_nextClientID(0L),
+	m_service_thread(std::bind(&Server::run_service, this))
 {
-public:
-	udp_server(boost::asio::io_service& io_service, PlayerLocationHandler plh)
-		: socket_(io_service, udp::endpoint(udp::v4(), 33333)), plh_(plh)
-	{
-		start_receive();
-	}
-
-private:
-	void start_receive()
-	{
-		socket_.async_receive_from(
-			boost::asio::buffer(recv_buffer_),
-			remote_endpoint_,
-			boost::bind(
-				&udp_server::handle_receive,
-				this,
-				boost::asio::placeholders::error
-				));
-	}
-
-	/*uint8_t* findStart(uint8_t *buf) {
-		for (int i = 0; i < 1024; i++) {
-			if (buf[i] != 0) {
-				return &buf[i];
-			}
-		}
-
-		return buf;
-	}*/
-
-	void handle_receive(const boost::system::error_code& error)
-	{
-		if (!error || error == boost::asio::error::message_size)
-		{
-			uint8_t *buf = recv_buffer_.data();
-			//uint8_t *start = findStart(buf);
-
-			const char * identifier = flatbuffers::GetBufferIdentifier(buf);
-
-			if (std::strcmp(identifier, TransferObjects::PlayerLocationIdentifier())) {
-				socket_.async_send_to(
-					plh_.handle(buf),
-					remote_endpoint_,
-					boost::bind(
-						&udp_server::handle_send,
-						this));
-			}
-
-			start_receive();
-		}
-	}
-
-	void handle_send()
-	{
-		std::cout << "sent";
-	}
-	PlayerLocationHandler plh_;
-	udp::socket socket_;
-	udp::endpoint remote_endpoint_;
-	boost::array<uint8_t, 1024> recv_buffer_;
+	//LogMessage("Starting server on port", local_port);
 };
 
-int main()
+Server::~Server()
 {
-	try
-	{
-		// call db for state of game
-		// load previous player locations
-
-		// load terrain
-		TerrainNavigator navigator;
-
-		navigator.loadMesh("terrain.navmesh");
-
-		// create handlers
-		PlayerLocationHandler plh(navigator);
-		
-		// create agents
-
-		// start tcp and udp servers
-		boost::asio::io_service io_service;
-		udp_server server(io_service, plh);
-		io_service.run();
-	}
-	catch (std::exception& e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
-
-	return 0;
+	m_io_service.stop();
+	m_service_thread.join();
 }
+
+void Server::start_receive()
+{
+	m_socket.async_receive_from(boost::asio::buffer(m_recv_buffer), m_remote_endpoint,
+		boost::bind(&Server::handle_receive, this, boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+}
+
+void Server::handle_receive(const boost::system::error_code& error, std::size_t bytes_transferred)
+{
+	if (!error)
+	{
+		try {
+			auto message = ClientMessage(std::string(m_recv_buffer.data(), m_recv_buffer.data() + bytes_transferred), get_client_id(m_remote_endpoint));
+			if (!message.first.empty()) {
+				m_incomingMessages.push(message);
+			}
+				
+			m_receivedBytes += bytes_transferred;
+			m_receivedMessages++;
+		}
+		catch (std::exception ex) {
+			//LogMessage("handle_receive: Error parsing incoming message:", ex.what());
+		}
+		catch (...) {
+			//LogMessage("handle_receive: Unknown error while parsing incoming message");
+		}
+	}
+	else
+	{
+		//LogMessage("handle_receive: error: ", error.message());
+	}
+
+	start_receive();
+}
+
+void Server::send(std::string message, udp::endpoint target_endpoint)
+{
+	m_socket.send_to(boost::asio::buffer(message), target_endpoint);
+	m_sentBytes += message.size();
+	m_sentMessages++;
+}
+
+void Server::run_service()
+{
+	start_receive();
+	while (!m_io_service.stopped()) {
+		try {
+			m_io_service.run();
+		}
+		catch (const std::exception& e) {
+			//LogMessage("Server network exception: ", e.what());
+		}
+		catch (...) {
+			//LogMessage("Unknown exception in server network thread");
+		}
+	}
+	//LogMessage("Server network thread stopped");
+};
+
+unsigned __int64 Server::get_client_id(udp::endpoint endpoint)
+{
+	auto cit = m_clients.right.find(endpoint);
+	if (cit != m_clients.right.end())
+		return (*cit).second;
+
+	m_nextClientID++;
+	m_clients.insert(Client(m_nextClientID, endpoint));
+	return m_nextClientID;
+};
+
+void Server::SendToClient(std::string message, unsigned __int64 clientID, bool guaranteed)
+{
+	try {
+		send(message, m_clients.left.at(clientID));
+	}
+	catch (std::out_of_range) {
+		//LogMessage("Unknown client ID");
+	}
+};
+
+void Server::SendToAllExcept(std::string message, unsigned __int64 clientID, bool guaranteed)
+{
+	for (auto client : m_clients) {
+		if (client.left != clientID) {
+			send(message, client.right);
+		}
+	}
+};
+
+void Server::SendToAll(std::string message, bool guaranteed)
+{
+	for (auto client : m_clients) {
+		send(message, client.right);
+	}
+		
+};
+
+ClientMessage Server::PopMessage() {
+	return m_incomingMessages.pop();
+}
+
+bool Server::HasMessages()
+{
+	return !m_incomingMessages.empty();
+};
