@@ -8,6 +8,7 @@
 #include <boost/thread.hpp>
 #include <string>
 #include <array>
+#include <list>
 
 using boost::asio::ip::udp;
 
@@ -26,6 +27,8 @@ public:
 	void SendToClient(std::string message, unsigned __int64 clientID, bool guaranteed = false);
 	void SendToAllExcept(std::string message, unsigned __int64 clientID, bool guaranteed = false);
 	void SendToAll(std::string message, bool guaranteed = false);
+	
+	inline std::list<unsigned __int64> getClientIds() { return m_clientIds; };
 
 	inline unsigned __int64 GetStatReceivedMessages() { return m_receivedMessages; };
 	inline unsigned __int64 GetStatReceivedBytes() { return m_receivedBytes; };
@@ -58,4 +61,5 @@ private:
 	unsigned __int64 m_receivedBytes;
 	unsigned __int64 m_sentMessages;
 	unsigned __int64 m_sentBytes;
+	std::list<unsigned __int64> m_clientIds;
 };

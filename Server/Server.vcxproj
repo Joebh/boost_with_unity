@@ -149,20 +149,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h" />
+    <ClInclude Include="game.h" />
     <ClInclude Include="generated\monster_generated.h" />
     <ClInclude Include="generated\player-location_generated.h" />
-    <ClInclude Include="handler.h" />
     <ClInclude Include="locked_queue.h" />
     <ClInclude Include="player-location.h" />
+    <ClInclude Include="player-login.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="terrain-navigator.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="handler.cpp" />
+    <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="player-location.cpp" />
+    <ClCompile Include="player-login.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

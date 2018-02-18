@@ -25,6 +25,12 @@
     <Filter Include="Header Files\input">
       <UniqueIdentifier>{4aa06f73-a780-448f-b628-85286e5d497f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{5af36021-1cad-4e39-a3e5-42e5c3c9f220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{18a733b2-80fe-45ea-8948-5bcf6a82a707}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -48,9 +54,6 @@
     <ClInclude Include="player-location.h">
       <Filter>Header Files\input</Filter>
     </ClInclude>
-    <ClInclude Include="handler.h">
-      <Filter>Header Files\input</Filter>
-    </ClInclude>
     <ClInclude Include="server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -59,6 +62,15 @@
     </ClInclude>
     <ClInclude Include="locked_queue.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player-login.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -71,14 +83,20 @@
     <ClCompile Include="player-location.cpp">
       <Filter>Source Files\input</Filter>
     </ClCompile>
-    <ClCompile Include="handler.cpp">
-      <Filter>Source Files\input</Filter>
-    </ClCompile>
     <ClCompile Include="server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="player-login.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

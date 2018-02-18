@@ -1,0 +1,10 @@
+namespace TransferObjects;
+
+table PlayerLogin {
+  username:string;
+  password:string;
+}
+
+root_type PlayerLogin;
+
+file_identifier "PLOG";

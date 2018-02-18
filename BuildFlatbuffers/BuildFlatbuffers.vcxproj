@@ -82,6 +82,7 @@ for /r %%i in (*.fbs) do (D:\flatbuffers\Debug\flatc.exe -I $(MSBuildProjectDire
     <Text Include="readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="player-login.fbs" />
     <None Include="monster.fbs" />
     <None Include="player-location.fbs" />
   </ItemGroup>

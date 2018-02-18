@@ -15,11 +15,15 @@ public class PlayerMovement : MonoBehaviour
     private NavMeshAgent navMeshAgent;
     private bool walking;
 
+    private bool updateFromServer_ = false;
+    private Vector3 updatedPositionFromServer_;
+
     void UpdateFromServer(TransferObjects.PlayerLocation pl)
     {
-        if (pl.Pos.HasValue)
+        if (pl.Dest.HasValue)
         {
-            gameObject.transform.position = new Vector3(pl.Pos.Value.X, pl.Pos.Value.Y, pl.Pos.Value.Z);
+            updateFromServer_ = true;
+            updatedPositionFromServer_ = new Vector3(pl.Dest.Value.X, pl.Dest.Value.Y, pl.Dest.Value.Z);
         }
     }
 
@@ -35,6 +39,12 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (updateFromServer_)
+        {
+            navMeshAgent.Warp(updatedPositionFromServer_);
+            updateFromServer_ = false;
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Input.GetButtonDown("Fire2"))
@@ -44,13 +54,13 @@ public class PlayerMovement : MonoBehaviour
                 if (hit.collider.CompareTag("Ground"))
                 {
                     walking = true;
-                    //navMeshAgent.destination = hit.point;
-                    //navMeshAgent.isStopped = false;
-                    
+                    navMeshAgent.destination = hit.point;
+                    navMeshAgent.isStopped = false;
+
                     FlatBuffers.FlatBufferBuilder fbb = new FlatBuffers.FlatBufferBuilder(1024);
-                    FlatBuffers.StringOffset id = fbb.CreateString("Joe");
+                    //FlatBuffers.StringOffset id = fbb.CreateString("Joe");
                     TransferObjects.PlayerLocation.StartPlayerLocation(fbb);
-                    TransferObjects.PlayerLocation.AddId(fbb, id);
+                    //TransferObjects.PlayerLocation.AddId(fbb, id);
 
                     TransferObjects.PlayerLocation.AddPos(fbb, 
                         TransferObjects.Vec3.CreateVec3(fbb, 
@@ -75,17 +85,17 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-        
-        //if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
-        //{
-        //    if (!navMeshAgent.hasPath || Mathf.Abs(navMeshAgent.velocity.sqrMagnitude) < float.Epsilon)
-        //    {
-        //        walking = false;
-        //    }
-        //}
-        //else {
-        //    walking = true;
-        //}
+
+        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        {
+            if (!navMeshAgent.hasPath || Mathf.Abs(navMeshAgent.velocity.sqrMagnitude) < float.Epsilon)
+            {
+                walking = false;
+            }
+        }
+        else {
+            walking = true;
+        }
 
         anim.SetBool("IsWalking", walking);
     }

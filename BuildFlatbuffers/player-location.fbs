@@ -9,7 +9,6 @@ struct Vec3 {
 table PlayerLocation {
   pos:Vec3;
   dest:Vec3;
-  id:string;
 }
 
 root_type PlayerLocation;

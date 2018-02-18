@@ -4,7 +4,8 @@
 Server::Server() :
 	m_socket(m_io_service, udp::endpoint(udp::v4(), 33333)),
 	m_nextClientID(0L),
-	m_service_thread(std::bind(&Server::run_service, this))
+	m_service_thread(std::bind(&Server::run_service, this)),
+	m_clientIds()
 {
 	//LogMessage("Starting server on port", local_port);
 };
@@ -26,7 +27,10 @@ void Server::handle_receive(const boost::system::error_code& error, std::size_t 
 	if (!error)
 	{
 		try {
-			auto message = ClientMessage(std::string(m_recv_buffer.data(), m_recv_buffer.data() + bytes_transferred), get_client_id(m_remote_endpoint));
+			auto message = ClientMessage(
+				std::string(m_recv_buffer.data(), m_recv_buffer.data() + bytes_transferred), 
+				get_client_id(m_remote_endpoint));
+
 			if (!message.first.empty()) {
 				m_incomingMessages.push(message);
 			}
@@ -80,6 +84,7 @@ unsigned __int64 Server::get_client_id(udp::endpoint endpoint)
 		return (*cit).second;
 
 	m_nextClientID++;
+	m_clientIds.push_front(m_nextClientID);
 	m_clients.insert(Client(m_nextClientID, endpoint));
 	return m_nextClientID;
 };
