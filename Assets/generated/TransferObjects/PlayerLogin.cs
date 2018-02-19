@@ -22,19 +22,23 @@ public struct PlayerLogin : IFlatbufferObject
   public ArraySegment<byte>? GetUsernameBytes() { return __p.__vector_as_arraysegment(4); }
   public string Password { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
   public ArraySegment<byte>? GetPasswordBytes() { return __p.__vector_as_arraysegment(6); }
+  public bool Success { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<PlayerLogin> CreatePlayerLogin(FlatBufferBuilder builder,
       StringOffset usernameOffset = default(StringOffset),
-      StringOffset passwordOffset = default(StringOffset)) {
-    builder.StartObject(2);
+      StringOffset passwordOffset = default(StringOffset),
+      bool success = false) {
+    builder.StartObject(3);
     PlayerLogin.AddPassword(builder, passwordOffset);
     PlayerLogin.AddUsername(builder, usernameOffset);
+    PlayerLogin.AddSuccess(builder, success);
     return PlayerLogin.EndPlayerLogin(builder);
   }
 
-  public static void StartPlayerLogin(FlatBufferBuilder builder) { builder.StartObject(2); }
+  public static void StartPlayerLogin(FlatBufferBuilder builder) { builder.StartObject(3); }
   public static void AddUsername(FlatBufferBuilder builder, StringOffset usernameOffset) { builder.AddOffset(0, usernameOffset.Value, 0); }
   public static void AddPassword(FlatBufferBuilder builder, StringOffset passwordOffset) { builder.AddOffset(1, passwordOffset.Value, 0); }
+  public static void AddSuccess(FlatBufferBuilder builder, bool success) { builder.AddBool(2, success, false); }
   public static Offset<PlayerLogin> EndPlayerLogin(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<PlayerLogin>(o);

@@ -18,8 +18,10 @@ public class PlayerMovement : MonoBehaviour
     private bool updateFromServer_ = false;
     private Vector3 updatedPositionFromServer_;
 
-    void UpdateFromServer(TransferObjects.PlayerLocation pl)
+    void UpdateFromServer(FlatBuffers.ByteBuffer bb)
     {
+        TransferObjects.PlayerLocation pl = TransferObjects.PlayerLocation.GetRootAsPlayerLocation(bb);
+
         if (pl.Dest.HasValue)
         {
             updateFromServer_ = true;
@@ -33,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
 
-        udpConnection.addRecvHandler(new PlayerLocationHandler(UpdateFromServer));
+        udpConnection.addRecvHandler("PLOC", new Handler(UpdateFromServer));
     }
 
     // Update is called once per frame
@@ -57,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
                     navMeshAgent.destination = hit.point;
                     navMeshAgent.isStopped = false;
 
-                    FlatBuffers.FlatBufferBuilder fbb = new FlatBuffers.FlatBufferBuilder(1024);
+                    FlatBuffers.FlatBufferBuilder fbb = new FlatBuffers.FlatBufferBuilder(Constants.Network.BUFFER_SIZE);
                     //FlatBuffers.StringOffset id = fbb.CreateString("Joe");
                     TransferObjects.PlayerLocation.StartPlayerLocation(fbb);
                     //TransferObjects.PlayerLocation.AddId(fbb, id);
@@ -79,9 +81,7 @@ public class PlayerMovement : MonoBehaviour
 
                     TransferObjects.PlayerLocation.FinishPlayerLocationBuffer(fbb, playerLocation);
 
-                    byte[] dst = new byte[fbb.DataBuffer.Length - fbb.DataBuffer.Position];
-                    Array.Copy(fbb.DataBuffer.Data, fbb.DataBuffer.Position, dst, 0, dst.Length);
-                    udpConnection.send(dst);
+                    udpConnection.send(fbb);
                 }
             }
         }

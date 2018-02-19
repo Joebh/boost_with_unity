@@ -8,7 +8,7 @@ public:                      // begin public section
 	PlayerLoginHandler(Game *game);       // constructor
 	PlayerLoginHandler(const PlayerLoginHandler& copy_from); //copy constructor
 	~PlayerLoginHandler();                    // destructor
-	void handle(const void *buf, unsigned __int64 serverClientId);
+	std::string handle(const void *buf, unsigned __int64 serverClientId);
 private:                      // begin private section
 	Game *game_;
 };

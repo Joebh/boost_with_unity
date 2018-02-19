@@ -20,8 +20,18 @@ public class UDPConnection : MonoBehaviour
     // "connection" things
     private IPEndPoint remoteEndPoint;
     private UdpClient client;
-    
-    private static List<PlayerLocationHandler> plHandlers = new List<PlayerLocationHandler>();
+
+    private static Dictionary<string, List<Handler>> handlerDictionary = new Dictionary<string, List<Handler>>();
+
+    static void runHandlers(string key, FlatBuffers.ByteBuffer bb)
+    {
+        List<Handler> handlers = handlerDictionary[key];
+
+        foreach (Handler handler in handlers) // Loop through List with foreach
+        {
+            handler(bb);
+        }
+    }
 
     static void OnUdpData(IAsyncResult result)
     {
@@ -35,22 +45,21 @@ public class UDPConnection : MonoBehaviour
         byte[] message = socket.EndReceive(result, ref source);
 
         var bb = new FlatBuffers.ByteBuffer(message);
-
+        
         if (TransferObjects.PlayerLocation.PlayerLocationBufferHasIdentifier(bb))
         {
-            TransferObjects.PlayerLocation pl = TransferObjects.PlayerLocation.GetRootAsPlayerLocation(bb);
-
-            foreach (PlayerLocationHandler handler in plHandlers) // Loop through List with foreach
-            {
-                handler(pl);
-            }
+            runHandlers("PLOC", bb);
+        }
+        if (TransferObjects.PlayerLogin.PlayerLoginBufferHasIdentifier(bb))
+        {
+            runHandlers("PLOG", bb);
         }
 
         // schedule the next receive operation once reading is done:
         socket.BeginReceive(new AsyncCallback(OnUdpData), socket);
     }
 
-    public void Start()
+    public void Awake()
     {
         // define
         IP = "127.0.0.1";
@@ -82,10 +91,22 @@ public class UDPConnection : MonoBehaviour
             print(err.ToString());
         }
     }
-    
-    public void addRecvHandler(PlayerLocationHandler handler)
+
+    public void send(FlatBuffers.FlatBufferBuilder fbb)
     {
-        plHandlers.Add(handler);
+        byte[] dst = new byte[fbb.DataBuffer.Length - fbb.DataBuffer.Position];
+        Array.Copy(fbb.DataBuffer.Data, fbb.DataBuffer.Position, dst, 0, dst.Length);
+        send(dst);
+    }
+    
+    public void addRecvHandler(string key, Handler handler)
+    {
+        if (!handlerDictionary.ContainsKey(key))
+        {
+            handlerDictionary[key] = new List<Handler>();
+        }
+        List<Handler> handlers = handlerDictionary[key];
+        handlers.Add(handler);
     }
 
 }

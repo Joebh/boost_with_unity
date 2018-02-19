@@ -51,7 +51,9 @@ int main()
 				}
 
 				if (flatbuffers::BufferHasIdentifier(buffer, TransferObjects::PlayerLoginIdentifier())) {
-					loginHandler.handle(buffer, clientId);
+					std::string successMessage = loginHandler.handle(buffer, clientId);
+
+					server.SendToClient(successMessage, clientId);
 				}
 			}
 

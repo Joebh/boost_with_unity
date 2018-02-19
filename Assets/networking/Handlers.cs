@@ -5,5 +5,5 @@ using System.Text;
 
 namespace Assets.networking.handlers
 {
-    public delegate void PlayerLocationHandler(TransferObjects.PlayerLocation pl);
+    public delegate void Handler(FlatBuffers.ByteBuffer bb);
 }

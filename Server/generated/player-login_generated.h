@@ -13,7 +13,8 @@ struct PlayerLogin;
 struct PlayerLogin FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_USERNAME = 4,
-    VT_PASSWORD = 6
+    VT_PASSWORD = 6,
+    VT_SUCCESS = 8
   };
   const flatbuffers::String *username() const {
     return GetPointer<const flatbuffers::String *>(VT_USERNAME);
@@ -21,12 +22,16 @@ struct PlayerLogin FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const flatbuffers::String *password() const {
     return GetPointer<const flatbuffers::String *>(VT_PASSWORD);
   }
+  bool success() const {
+    return GetField<uint8_t>(VT_SUCCESS, 0) != 0;
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_USERNAME) &&
            verifier.Verify(username()) &&
            VerifyOffset(verifier, VT_PASSWORD) &&
            verifier.Verify(password()) &&
+           VerifyField<uint8_t>(verifier, VT_SUCCESS) &&
            verifier.EndTable();
   }
 };
@@ -39,6 +44,9 @@ struct PlayerLoginBuilder {
   }
   void add_password(flatbuffers::Offset<flatbuffers::String> password) {
     fbb_.AddOffset(PlayerLogin::VT_PASSWORD, password);
+  }
+  void add_success(bool success) {
+    fbb_.AddElement<uint8_t>(PlayerLogin::VT_SUCCESS, static_cast<uint8_t>(success), 0);
   }
   explicit PlayerLoginBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -55,21 +63,25 @@ struct PlayerLoginBuilder {
 inline flatbuffers::Offset<PlayerLogin> CreatePlayerLogin(
     flatbuffers::FlatBufferBuilder &_fbb,
     flatbuffers::Offset<flatbuffers::String> username = 0,
-    flatbuffers::Offset<flatbuffers::String> password = 0) {
+    flatbuffers::Offset<flatbuffers::String> password = 0,
+    bool success = false) {
   PlayerLoginBuilder builder_(_fbb);
   builder_.add_password(password);
   builder_.add_username(username);
+  builder_.add_success(success);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<PlayerLogin> CreatePlayerLoginDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     const char *username = nullptr,
-    const char *password = nullptr) {
+    const char *password = nullptr,
+    bool success = false) {
   return TransferObjects::CreatePlayerLogin(
       _fbb,
       username ? _fbb.CreateString(username) : 0,
-      password ? _fbb.CreateString(password) : 0);
+      password ? _fbb.CreateString(password) : 0,
+      success);
 }
 
 inline const TransferObjects::PlayerLogin *GetPlayerLogin(const void *buf) {

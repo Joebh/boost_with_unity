@@ -3,6 +3,7 @@ namespace TransferObjects;
 table PlayerLogin {
   username:string;
   password:string;
+  success:bool;
 }
 
 root_type PlayerLogin;
