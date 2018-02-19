@@ -6,15 +6,17 @@
 
 class Player {
 public:
-	Player();
-	Player(std::string);
+	Player(std::string, unsigned __int64);
 	~Player();
 
 	void setLocation(float x, float y, float z);
+
+	unsigned __int64 getClientId() { return serverClientId_; };
 
 	std::string toBinary();
 
 private:
 	std::string username_;
 	float x_, y_, z_;
+	unsigned __int64 serverClientId_;
 };

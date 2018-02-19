@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LoadingWorld : MonoBehaviour {
-
-    public UDPConnection udpConnection;
-
+    
     public bool loggedIn_ = false;
+
+    private UDPConnection udpConnection = UDPConnection.getInstance();
 
     void UpdateFromServer(FlatBuffers.ByteBuffer bb)
     {
@@ -37,6 +37,7 @@ public class LoadingWorld : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         login("joe", "asdfasdf");
+        
 
         udpConnection.addRecvHandler("PLOG", new Handler(UpdateFromServer));
     }

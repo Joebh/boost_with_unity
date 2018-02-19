@@ -9,7 +9,7 @@ public:                      // begin public section
 	PlayerLocationHandler(TerrainNavigator, Game *);       // constructor
 	PlayerLocationHandler(const PlayerLocationHandler& copy_from); //copy constructor
 	~PlayerLocationHandler();                    // destructor
-	void handle(const void *buf, Player &player);
+	void handle(const void *buf, Player *player);
 private:                      // begin private section
 	TerrainNavigator navigator_;
 	Game *game_;

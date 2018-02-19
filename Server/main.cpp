@@ -42,12 +42,8 @@ int main()
 				
 				// a player updated his location, update it in the game object
 				if (flatbuffers::BufferHasIdentifier(buffer, TransferObjects::PlayerLocationIdentifier())) {
-					Player player = game.getPlayer(clientId);
+					Player *player = game.getPlayer(clientId);
 					playerLocationHandler.handle(buffer, player);
-
-					std::string updateLocation = player.toBinary();
-
-					server.SendToClient(updateLocation, clientId);
 				}
 
 				if (flatbuffers::BufferHasIdentifier(buffer, TransferObjects::PlayerLoginIdentifier())) {
@@ -58,19 +54,20 @@ int main()
 			}
 
 			// if need up date
-			//if (game.needsUpdate()) {
-			//	// for each client
-			//	auto ids = server.getClientIds();
+			if (game.needsUpdate()) {
+				// for each logged in player
+				std::map<std::string, Player *> playerMap = game.getPlayerMap();
 
-			//	for (auto clientId : ids) {
-			//		Player *player = game.getPlayer(clientId);
-			//		std::string updateLocation = player->toBinary();
+				for (auto playerPair : playerMap) {
+					Player *player = playerPair.second;
 
-			//		server.SendToClient(updateLocation, clientId);
-			//	}
-			//	
-			//	// send data coordisponding to what that client should see
-			//}
+					std::string updateLocation = player->toBinary();
+
+					server.SendToClient(updateLocation, player->getClientId());
+				}
+				
+				// send data coordisponding to what that client should see
+			}
 
 		}
 	}

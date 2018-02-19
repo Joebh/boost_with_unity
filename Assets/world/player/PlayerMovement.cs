@@ -10,13 +10,14 @@ using Assets.networking.handlers;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public UDPConnection udpConnection;
     private Animator anim;
     private NavMeshAgent navMeshAgent;
     private bool walking;
 
     private bool updateFromServer_ = false;
     private Vector3 updatedPositionFromServer_;
+
+    private UDPConnection udpConnection = UDPConnection.getInstance();
 
     void UpdateFromServer(FlatBuffers.ByteBuffer bb)
     {

@@ -4,8 +4,7 @@
 Server::Server() :
 	m_socket(m_io_service, udp::endpoint(udp::v4(), 33333)),
 	m_nextClientID(0L),
-	m_service_thread(std::bind(&Server::run_service, this)),
-	m_clientIds()
+	m_service_thread(std::bind(&Server::run_service, this))
 {
 	//LogMessage("Starting server on port", local_port);
 };
@@ -84,7 +83,6 @@ unsigned __int64 Server::get_client_id(udp::endpoint endpoint)
 		return (*cit).second;
 
 	m_nextClientID++;
-	m_clientIds.push_front(m_nextClientID);
 	m_clients.insert(Client(m_nextClientID, endpoint));
 	return m_nextClientID;
 };

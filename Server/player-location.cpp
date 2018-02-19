@@ -20,8 +20,8 @@ PlayerLocationHandler::~PlayerLocationHandler()
 
 }
 
-void PlayerLocationHandler::handle(const void *buf, Player &player) {
+void PlayerLocationHandler::handle(const void *buf, Player *player) {
 	auto playerLocation = TransferObjects::GetPlayerLocation(buf);	
-	player.setLocation(playerLocation->dest()->x(), playerLocation->dest()->y(), playerLocation->dest()->z());
+	player->setLocation(playerLocation->dest()->x(), playerLocation->dest()->y(), playerLocation->dest()->z());
 }
 

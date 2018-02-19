@@ -10,8 +10,31 @@ using System.IO;
 using System.Collections.Generic;
 using Assets.networking.handlers;
 
-public class UDPConnection : MonoBehaviour
+public class UDPConnection
 {
+    private static UDPConnection instance = null;
+
+    public static UDPConnection getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new UDPConnection();
+        }
+
+        return instance;
+    }
+
+    public UDPConnection()
+    {
+        // define
+        IP = "127.0.0.1";
+        port = 33333;
+
+        remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), port);
+        client = new UdpClient();
+
+        client.BeginReceive(new AsyncCallback(OnUdpData), client);
+    }
 
     // prefs
     private string IP;  // define in init
@@ -21,9 +44,9 @@ public class UDPConnection : MonoBehaviour
     private IPEndPoint remoteEndPoint;
     private UdpClient client;
 
-    private static Dictionary<string, List<Handler>> handlerDictionary = new Dictionary<string, List<Handler>>();
+    private Dictionary<string, List<Handler>> handlerDictionary = new Dictionary<string, List<Handler>>();
 
-    static void runHandlers(string key, FlatBuffers.ByteBuffer bb)
+    void runHandlers(string key, FlatBuffers.ByteBuffer bb)
     {
         List<Handler> handlers = handlerDictionary[key];
 
@@ -31,9 +54,10 @@ public class UDPConnection : MonoBehaviour
         {
             handler(bb);
         }
+
     }
 
-    static void OnUdpData(IAsyncResult result)
+    void OnUdpData(IAsyncResult result)
     {
         // this is what had been passed into BeginReceive as the second parameter:
         UdpClient socket = result.AsyncState as UdpClient;
@@ -58,22 +82,10 @@ public class UDPConnection : MonoBehaviour
         // schedule the next receive operation once reading is done:
         socket.BeginReceive(new AsyncCallback(OnUdpData), socket);
     }
-
-    public void Awake()
-    {
-        // define
-        IP = "127.0.0.1";
-        port = 33333;
-
-        remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), port);
-        client = new UdpClient();
         
-        client.BeginReceive(new AsyncCallback(OnUdpData), client);
-    }
-    
-    void Update()
+    void OnDestroy()
     {
-        
+        client.Close();
     }
 
     // sendData
@@ -88,7 +100,7 @@ public class UDPConnection : MonoBehaviour
         }
         catch (Exception err)
         {
-            print(err.ToString());
+            //print(err.ToString());
         }
     }
 
