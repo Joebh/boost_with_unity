@@ -84,7 +84,7 @@ for /r %%i in (*.fbs) do (D:\flatbuffers\Debug\flatc.exe -I $(MSBuildProjectDire
   <ItemGroup>
     <None Include="player-login.fbs" />
     <None Include="monster.fbs" />
-    <None Include="player-location.fbs" />
+    <None Include="player.fbs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

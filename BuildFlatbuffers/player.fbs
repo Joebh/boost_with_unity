@@ -6,11 +6,13 @@ struct Vec3 {
   z:float;
 }
 
-table PlayerLocation {
+table Player {
+  name:string;
+  zone:string;
   pos:Vec3;
   dest:Vec3;
 }
 
-root_type PlayerLocation;
+root_type Player;
 
-file_identifier "PLOC";
+file_identifier "PDAT";

@@ -42,17 +42,8 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="generated\monster_generated.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="generated\player-location_generated.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="terrain-navigator.h">
       <Filter>Header Files\terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="player-location.h">
-      <Filter>Header Files\input</Filter>
     </ClInclude>
     <ClInclude Include="server.h">
       <Filter>Header Files</Filter>
@@ -63,13 +54,28 @@
     <ClInclude Include="locked_queue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="player-login.h">
-      <Filter>Header Files\input</Filter>
-    </ClInclude>
     <ClInclude Include="game.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="player-handler.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="player-login-handler.h">
+      <Filter>Header Files\input</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\monster_generated.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\player_generated.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="generated\player-login_generated.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player-locator.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,22 +86,25 @@
     <ClCompile Include="terrain-navigator.cpp">
       <Filter>Source Files\terrain</Filter>
     </ClCompile>
-    <ClCompile Include="player-location.cpp">
-      <Filter>Source Files\input</Filter>
-    </ClCompile>
     <ClCompile Include="server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="player-login.cpp">
-      <Filter>Source Files\input</Filter>
-    </ClCompile>
     <ClCompile Include="game.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="player-handler.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="player-login-handler.cpp">
+      <Filter>Source Files\input</Filter>
+    </ClCompile>
+    <ClCompile Include="player-locator.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>

@@ -70,9 +70,9 @@ public class UDPConnection
 
         var bb = new FlatBuffers.ByteBuffer(message);
         
-        if (TransferObjects.PlayerLocation.PlayerLocationBufferHasIdentifier(bb))
+        if (TransferObjects.Player.PlayerBufferHasIdentifier(bb))
         {
-            runHandlers("PLOC", bb);
+            runHandlers("PDAT", bb);
         }
         if (TransferObjects.PlayerLogin.PlayerLoginBufferHasIdentifier(bb))
         {

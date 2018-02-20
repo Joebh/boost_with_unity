@@ -21,10 +21,10 @@
     <None Include="monster.fbs">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="player-location.fbs">
+    <None Include="player-login.fbs">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="player-login.fbs">
+    <None Include="player.fbs">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

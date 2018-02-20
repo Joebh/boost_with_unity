@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoadingWorld : MonoBehaviour {
     
     public bool loggedIn_ = false;
+    public InputField username;
+    public InputField password;
+
 
     private UDPConnection udpConnection = UDPConnection.getInstance();
 
@@ -20,11 +24,11 @@ public class LoadingWorld : MonoBehaviour {
         }
     }
 
-    void login(string username, string password)
+    public void login()
     {
         FlatBuffers.FlatBufferBuilder fbb = new FlatBuffers.FlatBufferBuilder(Constants.Network.BUFFER_SIZE);
-        FlatBuffers.StringOffset fb_username = fbb.CreateString(username);
-        FlatBuffers.StringOffset fb_password = fbb.CreateString(password);
+        FlatBuffers.StringOffset fb_username = fbb.CreateString(username.text);
+        FlatBuffers.StringOffset fb_password = fbb.CreateString(password.text);
         TransferObjects.PlayerLogin.StartPlayerLogin(fbb);
         TransferObjects.PlayerLogin.AddUsername(fbb, fb_username);
         TransferObjects.PlayerLogin.AddPassword(fbb, fb_password);
@@ -36,9 +40,6 @@ public class LoadingWorld : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        login("joe", "asdfasdf");
-        
-
         udpConnection.addRecvHandler("PLOG", new Handler(UpdateFromServer));
     }
 	

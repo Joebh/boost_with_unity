@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "terrain-navigator.h"
-#include "player-location.h"
-#include "player-login.h"
+#include "player-handler.h"
+#include "player-login-handler.h"
+#include "player-locator.h"
 #include "server.h"
 #include "game.h"
 #include <iostream>
@@ -21,9 +22,11 @@ int main()
 		// create game object that holds all shared data
 		Game game;
 
-		// create handlers
-		PlayerLocationHandler playerLocationHandler(navigator, &game);
+		// create handlers to deal with incoming messages
+		PlayerHandler playerHandler(navigator, &game);
 		PlayerLoginHandler loginHandler(&game);
+
+		PlayerLocator playerLocator;
 
 		// create agents
 
@@ -41,9 +44,9 @@ int main()
 				//const char * identifier = flatbuffers::GetBufferIdentifier(buffer);
 				
 				// a player updated his location, update it in the game object
-				if (flatbuffers::BufferHasIdentifier(buffer, TransferObjects::PlayerLocationIdentifier())) {
+				if (flatbuffers::BufferHasIdentifier(buffer, TransferObjects::PlayerIdentifier())) {
 					Player *player = game.getPlayer(clientId);
-					playerLocationHandler.handle(buffer, player);
+					playerHandler.handle(buffer, player);
 				}
 
 				if (flatbuffers::BufferHasIdentifier(buffer, TransferObjects::PlayerLoginIdentifier())) {
@@ -60,13 +63,18 @@ int main()
 
 				for (auto playerPair : playerMap) {
 					Player *player = playerPair.second;
+					
+					std::list<Player *> closePlayers = player->getClosePlayers();
+					playerLocator.findClosePlayers(player, closePlayers, playerMap);
 
-					std::string updateLocation = player->toBinary();
+					std::string playerData = playerHandler.toBinary(player);
+					server.SendToClient(playerData, player->getClientId());
 
-					server.SendToClient(updateLocation, player->getClientId());
+					for (Player *closePlayer : closePlayers) {
+						std::string playerData = playerHandler.toBinary(closePlayer);
+						server.SendToClient(playerData, player->getClientId());
+					}
 				}
-				
-				// send data coordisponding to what that client should see
 			}
 
 		}

@@ -1,5 +1,6 @@
 #pragma once
 #include "game.h"
+#include "constants.h"
 #include "generated\player-login_generated.h"
 
 class PlayerLoginHandler                     // begin declaration of the class

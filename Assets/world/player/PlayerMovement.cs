@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using System.IO;
@@ -21,12 +20,19 @@ public class PlayerMovement : MonoBehaviour
 
     void UpdateFromServer(FlatBuffers.ByteBuffer bb)
     {
-        TransferObjects.PlayerLocation pl = TransferObjects.PlayerLocation.GetRootAsPlayerLocation(bb);
+        TransferObjects.Player pl = TransferObjects.Player.GetRootAsPlayer(bb);
 
         if (pl.Dest.HasValue)
         {
-            updateFromServer_ = true;
             updatedPositionFromServer_ = new Vector3(pl.Dest.Value.X, pl.Dest.Value.Y, pl.Dest.Value.Z);
+
+            float distance = Vector3.Distance(gameObject.transform.position, updatedPositionFromServer_);
+
+            if (distance > 10)
+            {
+                // if updated position from server is not close enough update based on it
+                updateFromServer_ = true;
+            }
         }
     }
 
@@ -36,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         navMeshAgent = GetComponent<NavMeshAgent>();
 
-        udpConnection.addRecvHandler("PLOC", new Handler(UpdateFromServer));
+        udpConnection.addRecvHandler("PDAT", new Handler(UpdateFromServer));
     }
 
     // Update is called once per frame
@@ -62,25 +68,25 @@ public class PlayerMovement : MonoBehaviour
 
                     FlatBuffers.FlatBufferBuilder fbb = new FlatBuffers.FlatBufferBuilder(Constants.Network.BUFFER_SIZE);
                     //FlatBuffers.StringOffset id = fbb.CreateString("Joe");
-                    TransferObjects.PlayerLocation.StartPlayerLocation(fbb);
+                    TransferObjects.Player.StartPlayer(fbb);
                     //TransferObjects.PlayerLocation.AddId(fbb, id);
 
-                    TransferObjects.PlayerLocation.AddPos(fbb, 
+                    TransferObjects.Player.AddPos(fbb, 
                         TransferObjects.Vec3.CreateVec3(fbb, 
                         gameObject.transform.position.x,
                         gameObject.transform.position.y,
                         gameObject.transform.position.z));
 
-                    TransferObjects.PlayerLocation.AddDest(fbb, 
+                    TransferObjects.Player.AddDest(fbb, 
                         TransferObjects.Vec3.CreateVec3(
                             fbb, 
                             hit.point.x, 
                             hit.point.y, 
                             hit.point.z));
 
-                    FlatBuffers.Offset<TransferObjects.PlayerLocation> playerLocation = TransferObjects.PlayerLocation.EndPlayerLocation(fbb);
+                    FlatBuffers.Offset<TransferObjects.Player> playerLocation = TransferObjects.Player.EndPlayer(fbb);
 
-                    TransferObjects.PlayerLocation.FinishPlayerLocationBuffer(fbb, playerLocation);
+                    TransferObjects.Player.FinishPlayerBuffer(fbb, playerLocation);
 
                     udpConnection.send(fbb);
                 }

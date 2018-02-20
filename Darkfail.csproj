@@ -89,7 +89,7 @@
     <Compile Include="Assets\generated\MyGame\Color.cs" />
     <Compile Include="Assets\generated\MyGame\Monster.cs" />
     <Compile Include="Assets\generated\MyGame\Vec3.cs" />
-    <Compile Include="Assets\generated\TransferObjects\PlayerLocation.cs" />
+    <Compile Include="Assets\generated\TransferObjects\Player.cs" />
     <Compile Include="Assets\generated\TransferObjects\PlayerLogin.cs" />
     <Compile Include="Assets\generated\TransferObjects\Vec3.cs" />
     <Compile Include="Assets\networking\Handlers.cs" />

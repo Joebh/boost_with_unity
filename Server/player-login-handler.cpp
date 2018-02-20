@@ -1,5 +1,5 @@
 #include <iostream>            // for cout and cin
-#include "player-login.h"
+#include "player-login-handler.h"
 
 // constructor of TerrainNavigator,
 PlayerLoginHandler::PlayerLoginHandler(Game *game) :
